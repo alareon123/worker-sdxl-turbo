@@ -6,7 +6,10 @@
 # To learn more, see https://pip.pypa.io/en/stable/reference/requirements-file-format/
 
 runpod==1.7.1
-diffusers
-transformers
-accelerate
-hf_transfer
+diffusers  # Укажите версию diffusers
+transformers  # Укажите версию transformers
+accelerate  # Версия accelerate
+torch  # Версия PyTorch с поддержкой CUDA (если CUDA поддерживается на вашем устройстве)
+gdown # Для загрузки файлов с Google Drive
+hf_transfer # Для работы с Hugging Face Transfer
+
