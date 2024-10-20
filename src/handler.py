@@ -1,6 +1,6 @@
 import runpod
 from diffusers import AutoPipelineForText2Image, StableDiffusionXLPipeline, AutoencoderKL
-from diffusers.loaders import SD3LoraLoaderMixin
+from peft import LoraConfig, get_peft_model, set_peft_model_state_dict
 import torch
 import base64
 import io
@@ -44,9 +44,24 @@ try:
     pipe = StableDiffusionXLPipeline.from_single_file(model_path, vae=vae, torch_dtype=torch.float16)
     pipe.to("cuda")
 
+    # Настройка LoRA
+    lora_config = LoraConfig(
+        r=8,
+        lora_alpha=32,
+        target_modules=["attn1", "attn2"],  # Это могут быть любые слои, которые нужно модифицировать
+        lora_dropout=0.1,
+        bias="none"
+    )
+
+    # Применение LoRA к модели
+    pipe.unet = get_peft_model(pipe.unet, lora_config)
+
     # Загрузка весов LoRA
-    SD3LoraLoaderMixin.load_lora_weights(pipe, lora_path)
+    with open(lora_path, "rb") as f:
+        lora_state_dict = torch.load(f)
+    set_peft_model_state_dict(pipe.unet, lora_state_dict)
     print("LoRA успешно загружена.")
+
 except RuntimeError as e:
     print(f"Ошибка при загрузке модели: {e}")
     quit()

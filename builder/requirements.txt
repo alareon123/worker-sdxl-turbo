@@ -12,4 +12,4 @@ accelerate  # Версия accelerate
 torch  # Версия PyTorch с поддержкой CUDA (если CUDA поддерживается на вашем устройстве)
 gdown # Для загрузки файлов с Google Drive
 hf_transfer # Для работы с Hugging Face Transfer
-
+peft
